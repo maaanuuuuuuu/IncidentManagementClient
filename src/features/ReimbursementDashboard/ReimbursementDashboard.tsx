@@ -16,6 +16,7 @@ import HighchartsReact from 'highcharts-react-official';
 export const ReimbursementDashboard = () => {
   const [dateRange, setDateRange] = useState<DateRange<Date>>([addWeeks(new Date(), -1), new Date()]);
   const [incidents, setIncidents] = useState<IIncident[]>([]);
+  const [incidentsForCharts, setIncidentsForCharts] = useState<IIncident[]>([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [moneyBySpecie, setMoneyBySpecie] = useState(new Map<string, number>([]));
@@ -89,7 +90,7 @@ export const ReimbursementDashboard = () => {
   useEffect(() => {
     const newMoneyBySpecie = new Map<string, number>([]);
     const newMoneyByDay = new Map<string, number>([]);
-    incidents.forEach(incident => {
+    incidentsForCharts.forEach(incident => {
       const day = format(incident.incidentDate, "dd/MM/yyyy");
       // !newMoneyByDay.has(day) && newMoneyByDay.set(day, 0);
       const currentAmount: number = newMoneyByDay.get(day) !== undefined ? newMoneyByDay.get(day) as number : 0;
@@ -99,14 +100,47 @@ export const ReimbursementDashboard = () => {
     });
     setMoneyBySpecie(newMoneyBySpecie);
     setMoneyByDay(newMoneyByDay);
-  }, [incidents]);
+  }, [incidentsForCharts]);
 
   useEffect(() => {
     if (dateRange[0] !== null && dateRange[1] !== null) {
       fetchReimbursements();
+      fetchReimbursementsForCharts();
     }
   }, [dateRange]);
 
+  const fetchReimbursementsForCharts = async () => {
+    const headers: {
+      Accept: string;
+      "Content-Type": string;
+    } = {
+      "Accept": "application/ld+json",
+      "Content-Type": "application/json"
+    };
+
+    const response = await fetch(config.REACT_APP_BACKEND_URL + '/reimbursements?dateRange=' + (dateRange[0] as Date).toISOString() + ',' + (dateRange[1] as Date).toISOString(), {
+      method: "GET",
+      headers,
+    } as RequestInit);
+
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}`;
+      console.error(message);
+      return;
+    }
+    const jsonResponse: IResponse<IIncidentFromDB> = await response.json();
+    // setTotalCount(jsonResponse.totalCount);
+    // setPageNumber(jsonResponse.currentPage);
+    console.log("incindentsForCharts");
+    console.log(jsonResponse.data);
+    setIncidentsForCharts((jsonResponse.data).map((incident: IIncidentFromDB) => {
+      return {
+        ...incident,
+        id: incident._id,
+        incidentDate: new Date(incident.incidentDate)
+      }
+    }));
+  }
   const fetchReimbursements = async (page = 0, limit = 5) => {
     const headers: {
       Accept: string;
