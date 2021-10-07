@@ -1,38 +1,53 @@
 .App {
-  text-align: center;
+  margin: 20px;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.MuiTable-root {
+  border: 1px solid #E0E0E0;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.MuiTableHead-root {
+  background-color: #E0E0E0;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.page-content {
+  margin-top: 20px;
+}
+#add-incident__button {
+  background-color: red;
+  border-radius: 30px;
+  height: 60px;
   color: white;
+  font-size: 30px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
-
-.App-link {
-  color: #61dafb;
+#add-incident__button:hover {
+  background-color: #ff4c4c;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.table__no-data {
+  text-align: center;
+  width: 100%;
+  position: absolute;
+}
+.inspection-creation__form {
+  margin: 50px;
+}
+.inspection-creation__form > div {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.creation-form__button__create {
+  float: right;
+  margin-left: 10px!important;
+}
+.dashboard-date-picker {
+  position: relative;
+  padding-bottom: 70px;
+}
+.dashboard-date-picker > div {
+  position: absolute;
+  left: 37%;
+}
+.chart-container {
+  width: 45%;
+  float:left;
 }

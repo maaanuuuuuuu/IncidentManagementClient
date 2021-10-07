@@ -1,25 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { PickupLocationsContext, FishTypesContext } from './context';
+import { IncidentListPage } from './features';
+import { useApp } from './useApp';
+import { Tabs, Tab } from '@material-ui/core';
+import { ReimbursementDashboard } from './features/ReimbursementDashboard/ReimbursementDashboard';
 
 function App() {
+  const { pickupLocations, fishTypes, displayedTab, tabChange } = useApp();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <PickupLocationsContext.Provider value={pickupLocations}>
+        <FishTypesContext.Provider value={fishTypes}>
+          <Tabs
+            value={displayedTab}
+            onChange={tabChange}
+          >
+            <Tab value="IncidentListPage" label="Incidents" />
+            <Tab value="ReimbursmentDashboardPage" label="Remboursements" />
+          </Tabs>
+          <div className="page-content">
+            {displayedTab === "IncidentListPage" &&
+              <IncidentListPage />
+            }
+            {displayedTab === "ReimbursmentDashboardPage" &&
+              <ReimbursementDashboard />
+            }
+          </div>
+        </FishTypesContext.Provider>
+      </PickupLocationsContext.Provider >
+    </div >
   );
 }
 
